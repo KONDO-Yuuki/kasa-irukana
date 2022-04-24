@@ -1,1 +1,1 @@
-import './Button.stories';
+import './pages/Home.stories';
