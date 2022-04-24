@@ -1,7 +1,27 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 // import {forecastsApi} from '../api/forecasts';
 
-export type IsUmbrellaNecessary = 'NECESSARY' | 'MAYBE' | 'UNNECESSARY';
+export type UmbrellaNecessaryState =
+  | 'NECESSARY'
+  | 'MAYBE'
+  | 'UNNECESSARY'
+  | 'UNKNOWN';
+
+export const UmbrellaNecessaryStateWeight: {
+  [key in UmbrellaNecessaryState]: number;
+} = {
+  NECESSARY: 3,
+  MAYBE: 2,
+  UNNECESSARY: 1,
+  UNKNOWN: 0,
+} as const;
+
+type UmbrellaNecessary = {
+  date: string;
+  label: UmbrellaNecessaryState;
+};
+
+const INITIAL_UNBREL_NECESSARY_STATES: UmbrellaNecessary[] = [];
 
 export type Forecast = {
   date: string;
@@ -9,31 +29,46 @@ export type Forecast = {
   telop: string;
   detail: {weather: string; wind: string};
   temperature: {min: string | null; max: string | null};
-  chanceOfRain: {
-    T00_06: number | null;
-    T06_12: number | null;
-    T12_18: number | null;
-    T18_24: number;
-  };
+  chanceOfRainBy6Hours: Array<number | null>;
   imageUrl: string;
 };
 
 export type ForecastsState = {
-  values: Forecast[];
+  startForecasts: Forecast[];
+  goalForecasts: Forecast[];
+  umbrellaNecessaryStates: UmbrellaNecessary[];
 };
 
 const initialState: ForecastsState = {
-  values: [],
+  startForecasts: [],
+  goalForecasts: [],
+  umbrellaNecessaryStates: INITIAL_UNBREL_NECESSARY_STATES,
 };
 
-export const fetchForecastByCityCode = createAsyncThunk<any, string>(
+export const fetchGoalForecastByCityCode = createAsyncThunk<any, string>(
   'forecasts/fetchByCityCode/',
   async citiyId => {
     const result = await fetch(
       `https://weather.tsukumijima.net/api/forecast/city/${citiyId}`,
     );
     return result.json();
+    // todo エラーハンドリングの実装
   },
+);
+
+const createFetchForecastByCityCode = (name: string) =>
+  createAsyncThunk<any, string>(name, async citiyId => {
+    const result = await fetch(
+      `https://weather.tsukumijima.net/api/forecast/city/${citiyId}`,
+    );
+    return result.json();
+    // todo エラーハンドリングの実装
+  });
+export const fetchStartForecastByCityCode = createFetchForecastByCityCode(
+  'fetchStartForecastByCityCode',
+);
+export const fetchEndForecastByCityCode = createFetchForecastByCityCode(
+  'fetchEndForecastByCityCode',
 );
 
 export const forecastsSlice = createSlice({
@@ -41,8 +76,29 @@ export const forecastsSlice = createSlice({
   initialState: initialState,
   reducers: {},
   extraReducers: builder => {
-    builder.addCase(fetchForecastByCityCode.fulfilled, (state, action) => {
-      state.values = castApiResult(action.payload);
+    builder.addCase(fetchStartForecastByCityCode.fulfilled, (state, action) => {
+      state.startForecasts = castApiResult(action.payload);
+      if (
+        state.startForecasts.length === 3 &&
+        state.goalForecasts.length === 3
+      ) {
+        state.umbrellaNecessaryStates = calcUmbrellaNecessaries(
+          state.startForecasts,
+          state.goalForecasts,
+        );
+      }
+    });
+    builder.addCase(fetchEndForecastByCityCode.fulfilled, (state, action) => {
+      state.goalForecasts = castApiResult(action.payload);
+      if (
+        state.startForecasts.length === 3 &&
+        state.goalForecasts.length === 3
+      ) {
+        state.umbrellaNecessaryStates = calcUmbrellaNecessaries(
+          state.startForecasts,
+          state.goalForecasts,
+        );
+      }
     });
   },
 });
@@ -62,12 +118,12 @@ export const castApiResult = (body: any): Forecast[] => {
         min: forecast.temperature.min.celsius,
         max: forecast.temperature.max.celsius,
       },
-      chanceOfRain: {
-        T00_06: parseChanceOfRain(forecast.chanceOfRain.T00_06),
-        T06_12: parseChanceOfRain(forecast.chanceOfRain.T06_12),
-        T12_18: parseChanceOfRain(forecast.chanceOfRain.T12_18),
-        T18_24: parseChanceOfRain(forecast.chanceOfRain.T18_24),
-      },
+      chanceOfRainBy6Hours: [
+        parseChanceOfRain(forecast.chanceOfRain.T00_06),
+        parseChanceOfRain(forecast.chanceOfRain.T06_12),
+        parseChanceOfRain(forecast.chanceOfRain.T12_18),
+        parseChanceOfRain(forecast.chanceOfRain.T18_24),
+      ],
       imageUrl: forecast.image.url,
     };
   });
@@ -90,6 +146,73 @@ const parseChanceOfRain = (rainLabel: string) => {
     return null;
   }
   return Number(matched);
+};
+
+export const calcUmbrellaNecessaries = (
+  startForecasts: Forecast[],
+  goalForecasts: Forecast[],
+): UmbrellaNecessary[] => {
+  return startForecasts.map(sf => {
+    const gf = goalForecasts.find(g => g.date === sf.date);
+    if (!gf) {
+      return {date: sf.date, label: 'UNKNOWN'};
+    }
+    return {date: sf.date, label: isAmbrellaNecessary(sf, gf)};
+  });
+};
+
+export const isAmbrellaNecessary = (
+  startForecast: Forecast,
+  goalForecast: Forecast,
+): UmbrellaNecessaryState => {
+  return startForecast.chanceOfRainBy6Hours.reduce(
+    (
+      accum: UmbrellaNecessaryState,
+      currentStartPercent: number | null,
+      i: number,
+    ) => {
+      const currentGoalPercent = goalForecast.chanceOfRainBy6Hours[i];
+      // 0 : numberの事を考えてnullチェック
+      if (currentStartPercent === null || currentGoalPercent === null) {
+        // null(すでに経過した時刻)の場合は無視する
+        return accum;
+      }
+
+      if (i === 0) {
+        // 0 ~ 6時の天気は加味しない
+        return accum;
+      }
+
+      if (
+        accum === 'NECESSARY' ||
+        currentStartPercent >= 30 ||
+        currentGoalPercent >= 30
+      ) {
+        // すでにNECESSARY判定 or 降水確率30％より多いとNECESSARY
+        return 'NECESSARY';
+      }
+
+      if (
+        accum === 'MAYBE' ||
+        currentStartPercent > 0 ||
+        currentGoalPercent > 0
+      ) {
+        // すでにMAYBE判定 or 降水確率が0％より多いとMAYBE
+        return 'MAYBE';
+      }
+
+      if (
+        accum === 'UNNECESSARY' ||
+        (currentStartPercent === 0 && currentGoalPercent === 0)
+      ) {
+        // 降水確率0％のときのみUNNECESSARY
+        return 'UNNECESSARY';
+      }
+
+      return accum;
+    },
+    'UNKNOWN',
+  );
 };
 
 export default forecastsSlice.reducer;

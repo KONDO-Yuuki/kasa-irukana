@@ -151,12 +151,7 @@ export const forecastsSample: Forecast[] = [
       min: null,
       max: null,
     },
-    chanceOfRain: {
-      T00_06: null,
-      T06_12: null,
-      T12_18: null,
-      T18_24: 60,
-    },
+    chanceOfRainBy6Hours: [null, null, null, 60],
     imageUrl: 'https://www.jma.go.jp/bosai/forecast/img/313.svg',
   },
   {
@@ -171,12 +166,7 @@ export const forecastsSample: Forecast[] = [
       min: '14',
       max: '27',
     },
-    chanceOfRain: {
-      T00_06: 0,
-      T06_12: 0,
-      T12_18: 0,
-      T18_24: 0,
-    },
+    chanceOfRainBy6Hours: [0, 0, 0, 0],
     imageUrl: 'https://www.jma.go.jp/bosai/forecast/img/101.svg',
   },
   {
@@ -191,12 +181,7 @@ export const forecastsSample: Forecast[] = [
       min: '15',
       max: '25',
     },
-    chanceOfRain: {
-      T00_06: 40,
-      T06_12: 40,
-      T12_18: 40,
-      T18_24: 40,
-    },
+    chanceOfRainBy6Hours: [40, 40, 40, 40],
     imageUrl: 'https://www.jma.go.jp/bosai/forecast/img/200.svg',
   },
 ];
