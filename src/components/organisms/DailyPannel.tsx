@@ -2,6 +2,7 @@ import React from 'react';
 import {Card, Icon, Layout, Text} from '@ui-kitten/components';
 import {StyleSheet, View} from 'react-native';
 import {UmbrellaNecessaryState} from '../../features/forecasts';
+import {UmbrellaNecessaryLabel} from './UmbrellaNecessaryLabel';
 
 export type Props = {
   date: string;
@@ -12,40 +13,6 @@ export type Props = {
   umbrellaNecessaryState: UmbrellaNecessaryState;
 };
 
-const UmbrellaNecessaryLabel: React.FC<{
-  umbrellaNecessary: UmbrellaNecessaryState;
-}> = ({umbrellaNecessary}) => {
-  switch (umbrellaNecessary) {
-    case 'NECESSARY': {
-      return (
-        <Text category="s2" status="danger">
-          {'傘が必要です'}
-        </Text>
-      );
-    }
-    case 'MAYBE': {
-      return (
-        <Text category="s2" status="warning">
-          {'折りたたみ傘を忘れずに'}
-        </Text>
-      );
-    }
-    case 'UNNECESSARY': {
-      return (
-        <Text category="s2" status="primary">
-          {'傘は不要です'}
-        </Text>
-      );
-    }
-    case 'UNKNOWN': {
-      return (
-        <Text category="s2" status="basic">
-          {'不明'}
-        </Text>
-      );
-    }
-  }
-};
 export const DailyPannel: React.FC<Props> = ({
   umbrellaNecessaryState,
   startWeatherTelop,
