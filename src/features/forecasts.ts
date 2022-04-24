@@ -14,6 +14,8 @@ export type UmbrellaNecessary = {
 
 export type Forecast = {
   date: string;
+  position: string;
+  title: string;
   dateLabel: string;
   telop: string;
   detail: {weather: string; wind: string};
@@ -88,6 +90,8 @@ export const castApiResult = (body: any): Forecast[] => {
       date: forecast.date,
       dateLabel: forecast.dateLabel,
       telop: forecast.telop,
+      position: validBody.location.city,
+      title: validBody.title,
       detail: {
         weather: forecast.detail.weather,
         wind: forecast.detail.wind,

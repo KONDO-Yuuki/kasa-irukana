@@ -143,6 +143,8 @@ export const forecastsSample: Forecast[] = [
     date: '2022-04-24',
     dateLabel: '今日',
     telop: '雨のち曇',
+    position: '東京',
+    title: '東京都 東京 の天気',
     detail: {
       weather: '雨　夜遅く　くもり',
       wind: '北の風',
@@ -158,6 +160,8 @@ export const forecastsSample: Forecast[] = [
     date: '2022-04-25',
     dateLabel: '明日',
     telop: '晴時々曇',
+    position: '東京',
+    title: '東京都 東京 の天気',
     detail: {
       weather: '晴れ　時々　くもり',
       wind: '北の風　後　南の風',
@@ -172,6 +176,8 @@ export const forecastsSample: Forecast[] = [
   {
     date: '2022-04-26',
     dateLabel: '明後日',
+    position: '東京',
+    title: '東京都 東京 の天気',
     telop: '曇り',
     detail: {
       weather: 'くもり',

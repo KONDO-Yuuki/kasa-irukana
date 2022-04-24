@@ -1,11 +1,6 @@
 import React from 'react';
 import {Layout, List, Spinner} from '@ui-kitten/components';
-import {
-  StyleSheet,
-  View,
-  ListRenderItem,
-  ListRenderItemInfo,
-} from 'react-native';
+import {StyleSheet, View, ListRenderItem} from 'react-native';
 import {DailyPannel, Props as DailyPannelProps} from '../organisms/DailyPannel';
 
 type Props = {
@@ -22,9 +17,7 @@ export const Home: React.FC<Props> = ({isLoading, dailyPannels}) => {
     );
   }
 
-  const renderItem: ListRenderItem<DailyPannelProps> = (
-    info: ListRenderItemInfo<DailyPannelProps>,
-  ) => (
+  const renderItem: ListRenderItem<DailyPannelProps> = info => (
     <View style={styles.item}>
       <DailyPannel {...info.item} />
     </View>
