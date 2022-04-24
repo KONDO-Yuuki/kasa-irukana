@@ -1,14 +1,5 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * Generated with the TypeScript template
- * https://github.com/react-native-community/react-native-template-typescript
- *
- * @format
- */
-
 import React from 'react';
+
 import {
   SafeAreaView,
   ScrollView,
@@ -18,6 +9,8 @@ import {
   useColorScheme,
   View,
 } from 'react-native';
+
+import {Button, Icon} from '@ui-kitten/components';
 
 import {
   Colors,
@@ -55,7 +48,7 @@ const Section: React.FC<{
   );
 };
 
-const App = () => {
+export const Main = () => {
   const isDarkMode = useColorScheme() === 'dark';
 
   const backgroundStyle = {
@@ -74,8 +67,11 @@ const App = () => {
             backgroundColor: isDarkMode ? Colors.black : Colors.white,
           }}>
           <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
+            <Button
+              accessoryLeft={<Icon name="star" />}
+              onPress={() => console.log('e')}>
+              PRESS ME
+            </Button>{' '}
           </Section>
           <Section title="See Your Changes">
             <ReloadInstructions />
@@ -111,5 +107,3 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
 });
-
-export default App;
