@@ -1,4 +1,4 @@
-import {Forecast} from '../features/forecasts';
+import {Forecast, UmbrellaNecessary} from '../features/forecasts';
 
 export const forecastRowData = {
   publicTime: '2022-04-24T17:00:00+09:00',
@@ -99,10 +99,10 @@ export const forecastRowData = {
         },
       },
       chanceOfRain: {
-        T00_06: '40%',
-        T06_12: '40%',
-        T12_18: '40%',
-        T18_24: '40%',
+        T00_06: '20%',
+        T06_12: '20%',
+        T12_18: '20%',
+        T18_24: '20%',
       },
       image: {
         title: '曇り',
@@ -181,7 +181,22 @@ export const forecastsSample: Forecast[] = [
       min: '15',
       max: '25',
     },
-    chanceOfRainBy6Hours: [40, 40, 40, 40],
+    chanceOfRainBy6Hours: [20, 20, 20, 20],
     imageUrl: 'https://www.jma.go.jp/bosai/forecast/img/200.svg',
+  },
+];
+
+export const umbrelleNecessarySample: UmbrellaNecessary[] = [
+  {
+    date: '2022-04-24',
+    label: 'NECESSARY',
+  },
+  {
+    date: '2022-04-25',
+    label: 'UNNECESSARY',
+  },
+  {
+    date: '2022-04-26',
+    label: 'MAYBE',
   },
 ];

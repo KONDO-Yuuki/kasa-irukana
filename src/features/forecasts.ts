@@ -7,21 +7,10 @@ export type UmbrellaNecessaryState =
   | 'UNNECESSARY'
   | 'UNKNOWN';
 
-export const UmbrellaNecessaryStateWeight: {
-  [key in UmbrellaNecessaryState]: number;
-} = {
-  NECESSARY: 3,
-  MAYBE: 2,
-  UNNECESSARY: 1,
-  UNKNOWN: 0,
-} as const;
-
-type UmbrellaNecessary = {
+export type UmbrellaNecessary = {
   date: string;
   label: UmbrellaNecessaryState;
 };
-
-const INITIAL_UNBREL_NECESSARY_STATES: UmbrellaNecessary[] = [];
 
 export type Forecast = {
   date: string;
@@ -42,19 +31,8 @@ export type ForecastsState = {
 const initialState: ForecastsState = {
   startForecasts: [],
   goalForecasts: [],
-  umbrellaNecessaryStates: INITIAL_UNBREL_NECESSARY_STATES,
+  umbrellaNecessaryStates: [],
 };
-
-export const fetchGoalForecastByCityCode = createAsyncThunk<any, string>(
-  'forecasts/fetchByCityCode/',
-  async citiyId => {
-    const result = await fetch(
-      `https://weather.tsukumijima.net/api/forecast/city/${citiyId}`,
-    );
-    return result.json();
-    // todo エラーハンドリングの実装
-  },
-);
 
 const createFetchForecastByCityCode = (name: string) =>
   createAsyncThunk<any, string>(name, async citiyId => {

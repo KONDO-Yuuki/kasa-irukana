@@ -1,5 +1,9 @@
 import 'react-native';
-import {forecastsSample, forecastRowData} from '../fixtures/forecasts';
+import {
+  forecastsSample,
+  forecastRowData,
+  umbrelleNecessarySample,
+} from '../fixtures/forecasts';
 import {
   calcUmbrellaNecessaries,
   castApiResult,
@@ -7,19 +11,25 @@ import {
   UmbrellaNecessaryState,
 } from './forecasts';
 
-test('castApiResult', () => {
-  const result = castApiResult(forecastRowData);
-  expect(result).toMatchObject(forecastsSample);
+describe('castApiResult', () => {
+  it('fixture同士が変換できること', () => {
+    const result = castApiResult(forecastRowData);
+    expect(result).toMatchObject(forecastsSample);
+  });
 });
 
-it('calcUmbrellaNecessaries', () => {
-  describe('startForecastsに対応したgoalForecastsが無いとUNKNOWNになること', () => {
+describe('calcUmbrellaNecessaries', () => {
+  it('startForecastsに対応したgoalForecastsが無いとUNKNOWNになること', () => {
     const result = calcUmbrellaNecessaries(forecastsSample, []);
     expect(result).toMatchObject([
       {date: '2022-04-24', label: 'UNKNOWN'},
       {date: '2022-04-25', label: 'UNKNOWN'},
       {date: '2022-04-26', label: 'UNKNOWN'},
     ]);
+  });
+  it('fixture同士が変換できること', () => {
+    const result = calcUmbrellaNecessaries(forecastsSample, forecastsSample);
+    expect(result).toMatchObject(umbrelleNecessarySample);
   });
 });
 test.each<
