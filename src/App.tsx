@@ -3,10 +3,10 @@ import * as eva from '@eva-design/eva';
 import {ApplicationProvider, IconRegistry} from '@ui-kitten/components';
 import {EvaIconsPack} from '@ui-kitten/eva-icons';
 
-import {Main as _Main} from './Main';
+import {Navigator} from './Navigator';
 // import StorybookUI from '../storybook';
 
-let Main = _Main;
+let Main = Navigator;
 // storybook利用時にコメントアウトする
 // Main = StorybookUI;
 
