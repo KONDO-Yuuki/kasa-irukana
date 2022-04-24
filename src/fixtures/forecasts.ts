@@ -26,16 +26,16 @@ export const forecastRowData = {
       },
       temperature: {
         min: {
-          celsius: null,
+          celsius: null, // 当日特定時刻からnullになる
           fahrenheit: null,
         },
         max: {
-          celsius: null,
+          celsius: null, // 当日特定時刻からnullになる
           fahrenheit: null,
         },
       },
       chanceOfRain: {
-        T00_06: '--%',
+        T00_06: '--%', // 当日特定時刻から表示されない
         T06_12: '--%',
         T12_18: '--%',
         T18_24: '60%',
@@ -157,7 +157,6 @@ export const forecastsSample: Forecast[] = [
       T12_18: null,
       T18_24: 60,
     },
-    isUmbrellaNecessary: 'NECESSARY',
     imageUrl: 'https://www.jma.go.jp/bosai/forecast/img/313.svg',
   },
   {
@@ -178,7 +177,6 @@ export const forecastsSample: Forecast[] = [
       T12_18: 0,
       T18_24: 0,
     },
-    isUmbrellaNecessary: 'UNNECESSARY',
     imageUrl: 'https://www.jma.go.jp/bosai/forecast/img/101.svg',
   },
   {
@@ -199,7 +197,6 @@ export const forecastsSample: Forecast[] = [
       T12_18: 40,
       T18_24: 40,
     },
-    isUmbrellaNecessary: 'MAYBE',
     imageUrl: 'https://www.jma.go.jp/bosai/forecast/img/200.svg',
   },
 ];
