@@ -198,3 +198,5 @@ export const isAmbrellaNecessary = (
 };
 
 export default forecastsSlice.reducer;
+
+export type Position = 'start' | 'goal';

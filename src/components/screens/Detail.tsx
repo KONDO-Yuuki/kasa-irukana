@@ -1,10 +1,23 @@
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import React from 'react';
-import {View, Text} from 'react-native';
+import {useAppSelector} from '../../hooks';
+import {RootStackParamList} from '../../Navigator';
 
-export function DetailScreen() {
-  return (
-    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-      <Text>Dashboard Screen</Text>
-    </View>
-  );
-}
+import {Detail as DetailPage} from '../pages/Detail';
+
+type Props = NativeStackScreenProps<RootStackParamList, 'Detail'>;
+
+export const DetailScreen: React.FC<Props> = ({route}) => {
+  const {position, date} = route.params;
+  const forecast = useAppSelector(state => {
+    if (position === 'start') {
+      return state.forecasts.startForecasts.find(f => f.date === date);
+    }
+    return state.forecasts.goalForecasts.find(f => f.date === date);
+  });
+  if (!forecast) {
+    // todo　エラーハンドリング
+    return <></>;
+  }
+  return <DetailPage forecast={forecast} position={position} />;
+};

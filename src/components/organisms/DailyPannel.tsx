@@ -11,6 +11,8 @@ export type Props = {
   goalWeatherTelop: string;
   goalPosition: string;
   umbrellaNecessaryState: UmbrellaNecessaryState;
+  handleOnPressStart: (date: string) => void;
+  handleOnPressGoal: (date: string) => void;
 };
 
 export const DailyPannel: React.FC<Props> = ({
@@ -20,17 +22,9 @@ export const DailyPannel: React.FC<Props> = ({
   goalWeatherTelop,
   goalPosition,
   date,
+  handleOnPressStart,
+  handleOnPressGoal,
 }) => {
-  const renderItemHeader = (headerProps: any) => (
-    <View {...headerProps} style={styles.itemHeader}>
-      <Text category="s1" style={styles.date}>
-        {date}
-      </Text>
-      <View style={styles.umbrella}>
-        <UmbrellaNecessaryLabel umbrellaNecessary={umbrellaNecessaryState} />
-      </View>
-    </View>
-  );
   const renderStartCardHeader = (headerProps: any, position: string) => (
     <View {...headerProps} style={styles.cardHeader}>
       <Icon style={styles.icon} fill="#8F9BB3" name="home" />
@@ -44,26 +38,34 @@ export const DailyPannel: React.FC<Props> = ({
     </View>
   );
   return (
-    <Card header={headerProps => renderItemHeader(headerProps)}>
-      <View>
-        <Layout style={styles.container} level="1">
-          <Card
-            style={styles.card}
-            header={headerProps =>
-              renderStartCardHeader(headerProps, startPosition)
-            }>
-            <Text>{startWeatherTelop}</Text>
-          </Card>
-          <Card
-            style={styles.card}
-            header={headerProps =>
-              renderGoalCardHeader(headerProps, goalPosition)
-            }>
-            <Text>{goalWeatherTelop}</Text>
-          </Card>
-        </Layout>
-      </View>
-    </Card>
+    <>
+      <Layout style={styles.itemHeader}>
+        <Text category="s1" style={styles.date}>
+          {date}
+        </Text>
+        <View style={styles.umbrella}>
+          <UmbrellaNecessaryLabel umbrellaNecessary={umbrellaNecessaryState} />
+        </View>
+      </Layout>
+      <Layout style={styles.container} level="1">
+        <Card
+          style={styles.card}
+          header={headerProps =>
+            renderStartCardHeader(headerProps, startPosition)
+          }
+          onPress={() => handleOnPressStart(date)}>
+          <Text>{startWeatherTelop}</Text>
+        </Card>
+        <Card
+          style={styles.card}
+          header={headerProps =>
+            renderGoalCardHeader(headerProps, goalPosition)
+          }
+          onPress={() => handleOnPressGoal(date)}>
+          <Text>{goalWeatherTelop}</Text>
+        </Card>
+      </Layout>
+    </>
   );
 };
 

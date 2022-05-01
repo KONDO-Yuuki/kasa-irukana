@@ -24,7 +24,7 @@ export const Home: React.FC<Props> = ({isLoading, dailyPannels}) => {
   );
 
   return (
-    <Layout style={styles.container} level="4">
+    <Layout style={styles.container} level="1">
       <List
         contentContainerStyle={styles.contentContainer}
         data={dailyPannels}

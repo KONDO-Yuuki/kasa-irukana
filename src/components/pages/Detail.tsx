@@ -2,18 +2,18 @@ import React from 'react';
 import {Layout} from '@ui-kitten/components';
 import {StyleSheet} from 'react-native';
 
-import {Forecast} from '../../features/forecasts';
+import {Forecast, Position} from '../../features/forecasts';
 import {ForecastDetailPannel} from '../organisms/ForecastDetailPannel';
 
 type Props = {
   forecast: Forecast;
-  icon: string;
+  position: Position;
 };
 
-export const Detail: React.FC<Props> = ({forecast, icon}) => {
+export const Detail: React.FC<Props> = ({forecast, position}) => {
   return (
     <Layout style={styles.container} level="4">
-      <ForecastDetailPannel forecast={forecast} iconName={icon} />
+      <ForecastDetailPannel forecast={forecast} position={position} />
     </Layout>
   );
 };

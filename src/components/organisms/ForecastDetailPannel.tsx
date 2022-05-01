@@ -1,12 +1,12 @@
 import React from 'react';
 
 import {ListRenderItem, StyleSheet, View} from 'react-native';
-import {Forecast} from '../../features/forecasts';
+import {Forecast, Position} from '../../features/forecasts';
 import {Card, Divider, Icon, List, ListItem, Text} from '@ui-kitten/components';
 
 export type Props = {
   forecast: Forecast;
-  iconName: string;
+  position: Position;
 };
 
 const castNullableNum = (num: number | string | null): string => {
@@ -15,7 +15,7 @@ const castNullableNum = (num: number | string | null): string => {
   }
   return String(num);
 };
-export const ForecastDetailPannel: React.FC<Props> = ({forecast, iconName}) => {
+export const ForecastDetailPannel: React.FC<Props> = ({forecast, position}) => {
   const data = [
     {
       title: '降水確率(0~6時)',
@@ -53,7 +53,11 @@ export const ForecastDetailPannel: React.FC<Props> = ({forecast, iconName}) => {
 
   const renderCardHeader = (headerProps: any) => (
     <View {...headerProps} style={styles.header}>
-      <Icon style={styles.icon} fill="#8F9BB3" name={iconName} />
+      <Icon
+        style={styles.icon}
+        fill="#8F9BB3"
+        name={position === 'start' ? 'home' : 'briefcase'}
+      />
       <Text category="s1">{forecast.title}</Text>
       <Text category="s2">{forecast.date}</Text>
     </View>

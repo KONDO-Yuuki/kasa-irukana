@@ -5,5 +5,5 @@ import {Detail} from './Detail';
 import {forecastsSample} from '../../fixtures/forecasts';
 
 storiesOf('Detail', module).add('basic', () => (
-  <Detail forecast={forecastsSample[0]} icon={'home'} />
+  <Detail forecast={forecastsSample[0]} position={'start'} />
 ));

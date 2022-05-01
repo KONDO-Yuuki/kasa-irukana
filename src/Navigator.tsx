@@ -6,20 +6,26 @@ import {HomeScreen} from './components/screens/Home';
 import {DetailScreen} from './components/screens/Detail';
 import {store} from './store';
 import {Provider as ReduxProvider} from 'react-redux';
+import {Position} from './features/forecasts';
 
-const Stack = createNativeStackNavigator();
+export type RootStackParamList = {
+  Home: undefined;
+  Detail: {date: string; position: Position};
+};
+
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export function Navigator() {
   return (
     <ReduxProvider store={store}>
       <NavigationContainer>
-        <Stack.Navigator>
+        <Stack.Navigator initialRouteName="Home">
           <Stack.Screen
-            name="Dashboard"
+            name="Home"
             component={HomeScreen}
-            options={{title: 'ダッシュボード'}}
+            options={{title: '傘いるかな？'}}
           />
-          <Stack.Screen name="詳細な天気" component={DetailScreen} />
+          <Stack.Screen name="Detail" component={DetailScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </ReduxProvider>
