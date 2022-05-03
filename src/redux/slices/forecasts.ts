@@ -1,34 +1,10 @@
-import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
-// import {forecastsApi} from '../api/forecasts';
-
-export type UmbrellaNecessaryState =
-  | 'NECESSARY'
-  | 'MAYBE'
-  | 'UNNECESSARY'
-  | 'UNKNOWN';
-
-export type UmbrellaNecessary = {
-  date: string;
-  label: UmbrellaNecessaryState;
-};
-
-export type Forecast = {
-  date: string;
-  position: string;
-  title: string;
-  dateLabel: string;
-  telop: string;
-  detail: {weather: string; wind: string};
-  temperature: {min: string | null; max: string | null};
-  chanceOfRainBy6Hours: Array<number | null>;
-  imageUrl: string;
-};
-
-export type ForecastsState = {
-  startForecasts: Forecast[];
-  goalForecasts: Forecast[];
-  umbrellaNecessaryStates: UmbrellaNecessary[];
-};
+import {AnyAction, createAsyncThunk, createSlice} from '@reduxjs/toolkit';
+import {
+  Forecast,
+  ForecastsState,
+  UmbrellaNecessary,
+  UmbrellaNecessaryState,
+} from '../../types/forecasts';
 
 const initialState: ForecastsState = {
   startForecasts: [],
@@ -58,28 +34,27 @@ export const forecastsSlice = createSlice({
   extraReducers: builder => {
     builder.addCase(fetchStartForecastByCityCode.fulfilled, (state, action) => {
       state.startForecasts = castApiResult(action.payload);
-      if (
-        state.startForecasts.length === 3 &&
-        state.goalForecasts.length === 3
-      ) {
-        state.umbrellaNecessaryStates = calcUmbrellaNecessaries(
-          state.startForecasts,
-          state.goalForecasts,
-        );
-      }
     });
     builder.addCase(fetchEndForecastByCityCode.fulfilled, (state, action) => {
       state.goalForecasts = castApiResult(action.payload);
-      if (
-        state.startForecasts.length === 3 &&
-        state.goalForecasts.length === 3
-      ) {
-        state.umbrellaNecessaryStates = calcUmbrellaNecessaries(
-          state.startForecasts,
-          state.goalForecasts,
-        );
-      }
     });
+    builder.addMatcher(
+      (action: AnyAction) => {
+        return action.type.endsWith('fulfilled'); // fulfilled系のAPIの場合のみ発火するhook
+      },
+      state => {
+        // startForecasts / goalForecastsの両方がセットされている場合、umbrellaNecessaryStatesを再計算する
+        if (
+          state.startForecasts.length === 3 &&
+          state.goalForecasts.length === 3
+        ) {
+          state.umbrellaNecessaryStates = calcUmbrellaNecessaries(
+            state.startForecasts,
+            state.goalForecasts,
+          );
+        }
+      },
+    );
   },
 });
 
@@ -130,6 +105,12 @@ const parseChanceOfRain = (rainLabel: string) => {
   return Number(matched);
 };
 
+/**
+ *
+ * @param startForecasts 出発地のForecast
+ * @param goalForecasts 到着地のForecast
+ * @returns UmbrellaNecessaryモデル(日付と傘が必要かどうかのステータス)
+ */
 export const calcUmbrellaNecessaries = (
   startForecasts: Forecast[],
   goalForecasts: Forecast[],
@@ -198,5 +179,3 @@ export const isAmbrellaNecessary = (
 };
 
 export default forecastsSlice.reducer;
-
-export type Position = 'start' | 'goal';
