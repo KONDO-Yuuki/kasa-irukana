@@ -96,14 +96,11 @@ export const forecastsSlice = createSlice({
     });
     builder.addMatcher(
       (action: AnyAction) => {
-        return action.type.endsWith('fulfilled'); // fulfilled系のAPIの場合のみ発火するhook
+        return action.type.endsWith('fulfilled'); // fulfilled系のAPIの場合のみ発火する
       },
       state => {
         // startForecasts / goalForecastsの両方がセットされている場合、umbrellaNecessaryStatesを再計算する
-        if (
-          state.startForecasts.length === 3 &&
-          state.goalForecasts.length === 3
-        ) {
+        if (state.startForecasts.length > 0 && state.goalForecasts.length > 0) {
           state.umbrellaNecessaryStates = calcUmbrellaNecessaries(
             state.startForecasts,
             state.goalForecasts,
