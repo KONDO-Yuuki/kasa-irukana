@@ -1,9 +1,9 @@
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import React from 'react';
-import {useAppSelector} from '../../hooks';
-import {RootStackParamList} from '../../Navigator';
+import {useAppSelector} from '../redux';
+import {RootStackParamList} from '../Navigator';
 
-import {Detail as DetailPage} from '../pages/Detail';
+import {Detail as DetailPage} from '../components/pages/Detail';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Detail'>;
 
