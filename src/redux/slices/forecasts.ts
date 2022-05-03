@@ -235,3 +235,4 @@ export const isAmbrellaNecessary = (
 };
 
 export default forecastsSlice.reducer;
+export const {init} = forecastsSlice.actions;
