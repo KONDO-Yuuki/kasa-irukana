@@ -1,4 +1,4 @@
-import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
+import {AnyAction, createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import {
   Forecast,
   ForecastsState,
@@ -34,28 +34,27 @@ export const forecastsSlice = createSlice({
   extraReducers: builder => {
     builder.addCase(fetchStartForecastByCityCode.fulfilled, (state, action) => {
       state.startForecasts = castApiResult(action.payload);
-      if (
-        state.startForecasts.length === 3 &&
-        state.goalForecasts.length === 3
-      ) {
-        state.umbrellaNecessaryStates = calcUmbrellaNecessaries(
-          state.startForecasts,
-          state.goalForecasts,
-        );
-      }
     });
     builder.addCase(fetchEndForecastByCityCode.fulfilled, (state, action) => {
       state.goalForecasts = castApiResult(action.payload);
-      if (
-        state.startForecasts.length === 3 &&
-        state.goalForecasts.length === 3
-      ) {
-        state.umbrellaNecessaryStates = calcUmbrellaNecessaries(
-          state.startForecasts,
-          state.goalForecasts,
-        );
-      }
     });
+    builder.addMatcher(
+      (action: AnyAction) => {
+        return action.type.endsWith('fulfilled'); // fulfilled系のAPIの場合のみ発火するhook
+      },
+      state => {
+        // startForecasts / goalForecastsの両方がセットされている場合、umbrellaNecessaryStatesを再計算する
+        if (
+          state.startForecasts.length === 3 &&
+          state.goalForecasts.length === 3
+        ) {
+          state.umbrellaNecessaryStates = calcUmbrellaNecessaries(
+            state.startForecasts,
+            state.goalForecasts,
+          );
+        }
+      },
+    );
   },
 });
 
