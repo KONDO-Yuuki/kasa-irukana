@@ -1,4 +1,5 @@
 import {AnyAction, createAsyncThunk, createSlice} from '@reduxjs/toolkit';
+import axios, {AxiosError} from 'axios';
 import {
   Forecast,
   ForecastsState,
@@ -10,21 +11,59 @@ const initialState: ForecastsState = {
   startForecasts: [],
   goalForecasts: [],
   umbrellaNecessaryStates: [],
+  error: null,
 };
 
+interface ValidationErrors {
+  errorMessage: string;
+  errorDetail: string;
+}
+
 const createFetchForecastByCityCode = (name: string) =>
-  createAsyncThunk<any, string>(name, async citiyId => {
-    const result = await fetch(
-      `https://weather.tsukumijima.net/api/forecast/city/${citiyId}`,
-    );
-    return result.json();
-    // todo エラーハンドリングの実装
+  createAsyncThunk<
+    any,
+    string,
+    {
+      rejectValue: ValidationErrors;
+    }
+  >(name, async (citiyId, {rejectWithValue}) => {
+    try {
+      const result = await axios.get(
+        `https://weather.tsukumijima.net/api/forecast/city/${citiyId}`,
+      );
+      if (result.data.error) {
+        return rejectWithValue({
+          errorMessage: '通信に失敗しました',
+          errorDetail: result.data.error,
+        });
+      }
+      return result.data;
+    } catch (err) {
+      // todo sentryなどへの通知を実装
+      // @ts-ignore axiosのエラーの取り扱い
+      let error: AxiosError<ValidationErrors> = err;
+      console.log(error);
+      if (!error.response) {
+        // axios以外のエラーだった場合そのままthrowする
+        throw err;
+      }
+      if ([404, 403, 502, 503].includes(error.response.status)) {
+        return rejectWithValue({
+          errorMessage: '通信に失敗しました',
+          errorDetail: `status code:${error.response.status}`,
+        });
+      }
+      return rejectWithValue({
+        errorMessage: '不明なエラーが発生しました',
+        errorDetail: error.message,
+      });
+    }
   });
 export const fetchStartForecastByCityCode = createFetchForecastByCityCode(
   'fetchStartForecastByCityCode',
 );
-export const fetchEndForecastByCityCode = createFetchForecastByCityCode(
-  'fetchEndForecastByCityCode',
+export const fetchGoalForecastByCityCode = createFetchForecastByCityCode(
+  'fetchGoalForecastByCityCode',
 );
 
 export const forecastsSlice = createSlice({
@@ -35,8 +74,24 @@ export const forecastsSlice = createSlice({
     builder.addCase(fetchStartForecastByCityCode.fulfilled, (state, action) => {
       state.startForecasts = castApiResult(action.payload);
     });
-    builder.addCase(fetchEndForecastByCityCode.fulfilled, (state, action) => {
+    builder.addCase(fetchStartForecastByCityCode.rejected, (state, action) => {
+      state.startForecasts = [];
+      if (action.payload) {
+        state.error = action.payload.errorMessage;
+      } else {
+        state.error = action.error.message;
+      }
+    });
+    builder.addCase(fetchGoalForecastByCityCode.fulfilled, (state, action) => {
       state.goalForecasts = castApiResult(action.payload);
+    });
+    builder.addCase(fetchGoalForecastByCityCode.rejected, (state, action) => {
+      state.goalForecasts = [];
+      if (action.payload) {
+        state.error = action.payload.errorMessage;
+      } else {
+        state.error = action.error.message;
+      }
     });
     builder.addMatcher(
       (action: AnyAction) => {
