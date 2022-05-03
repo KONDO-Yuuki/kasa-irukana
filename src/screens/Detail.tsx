@@ -16,8 +16,7 @@ export const DetailScreen: React.FC<Props> = ({route}) => {
     return state.forecasts.goalForecasts.find(f => f.date === date);
   });
   if (!forecast) {
-    // todo　エラーハンドリング
-    return <></>;
+    throw new Error('表示する予報がありません');
   }
   return <DetailPage forecast={forecast} position={position} />;
 };

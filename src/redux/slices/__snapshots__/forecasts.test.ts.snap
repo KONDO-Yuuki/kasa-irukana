@@ -1,0 +1,160 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`forecastsSlice fetchGoalForecastByCityCode fulfilled 1`] = `
+Array [
+  Object {
+    "chanceOfRainBy6Hours": Array [
+      null,
+      null,
+      null,
+      60,
+    ],
+    "date": "2022-04-24",
+    "dateLabel": "今日",
+    "detail": Object {
+      "weather": "雨　夜遅く　くもり",
+      "wind": "北の風",
+    },
+    "imageUrl": "https://www.jma.go.jp/bosai/forecast/img/313.svg",
+    "position": "東京",
+    "telop": "雨のち曇",
+    "temperature": Object {
+      "max": null,
+      "min": null,
+    },
+    "title": "東京都 東京 の天気",
+  },
+  Object {
+    "chanceOfRainBy6Hours": Array [
+      0,
+      0,
+      0,
+      0,
+    ],
+    "date": "2022-04-25",
+    "dateLabel": "明日",
+    "detail": Object {
+      "weather": "晴れ　時々　くもり",
+      "wind": "北の風　後　南の風",
+    },
+    "imageUrl": "https://www.jma.go.jp/bosai/forecast/img/101.svg",
+    "position": "東京",
+    "telop": "晴時々曇",
+    "temperature": Object {
+      "max": "27",
+      "min": "14",
+    },
+    "title": "東京都 東京 の天気",
+  },
+  Object {
+    "chanceOfRainBy6Hours": Array [
+      20,
+      20,
+      20,
+      20,
+    ],
+    "date": "2022-04-26",
+    "dateLabel": "明後日",
+    "detail": Object {
+      "weather": "くもり",
+      "wind": "南の風　後　強く",
+    },
+    "imageUrl": "https://www.jma.go.jp/bosai/forecast/img/200.svg",
+    "position": "東京",
+    "telop": "曇り",
+    "temperature": Object {
+      "max": "25",
+      "min": "15",
+    },
+    "title": "東京都 東京 の天気",
+  },
+]
+`;
+
+exports[`forecastsSlice fetchStartForecastByCityCode fulfilled 1`] = `
+Array [
+  Object {
+    "chanceOfRainBy6Hours": Array [
+      null,
+      null,
+      null,
+      60,
+    ],
+    "date": "2022-04-24",
+    "dateLabel": "今日",
+    "detail": Object {
+      "weather": "雨　夜遅く　くもり",
+      "wind": "北の風",
+    },
+    "imageUrl": "https://www.jma.go.jp/bosai/forecast/img/313.svg",
+    "position": "東京",
+    "telop": "雨のち曇",
+    "temperature": Object {
+      "max": null,
+      "min": null,
+    },
+    "title": "東京都 東京 の天気",
+  },
+  Object {
+    "chanceOfRainBy6Hours": Array [
+      0,
+      0,
+      0,
+      0,
+    ],
+    "date": "2022-04-25",
+    "dateLabel": "明日",
+    "detail": Object {
+      "weather": "晴れ　時々　くもり",
+      "wind": "北の風　後　南の風",
+    },
+    "imageUrl": "https://www.jma.go.jp/bosai/forecast/img/101.svg",
+    "position": "東京",
+    "telop": "晴時々曇",
+    "temperature": Object {
+      "max": "27",
+      "min": "14",
+    },
+    "title": "東京都 東京 の天気",
+  },
+  Object {
+    "chanceOfRainBy6Hours": Array [
+      20,
+      20,
+      20,
+      20,
+    ],
+    "date": "2022-04-26",
+    "dateLabel": "明後日",
+    "detail": Object {
+      "weather": "くもり",
+      "wind": "南の風　後　強く",
+    },
+    "imageUrl": "https://www.jma.go.jp/bosai/forecast/img/200.svg",
+    "position": "東京",
+    "telop": "曇り",
+    "temperature": Object {
+      "max": "25",
+      "min": "15",
+    },
+    "title": "東京都 東京 の天気",
+  },
+]
+`;
+
+exports[`forecastsSlice umbrellaNecessaryStates fulfilled start and goal 1`] = `
+Array [
+  Object {
+    "date": "2022-04-24",
+    "label": "NECESSARY",
+  },
+  Object {
+    "date": "2022-04-25",
+    "label": "UNNECESSARY",
+  },
+  Object {
+    "date": "2022-04-26",
+    "label": "MAYBE",
+  },
+]
+`;

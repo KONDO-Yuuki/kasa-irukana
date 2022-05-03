@@ -25,5 +25,6 @@ export type ForecastsState = {
   startForecasts: Forecast[];
   goalForecasts: Forecast[];
   umbrellaNecessaryStates: UmbrellaNecessary[];
+  error: string | null | undefined;
 };
 export type Position = 'start' | 'goal';
