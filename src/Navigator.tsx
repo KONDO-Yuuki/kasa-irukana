@@ -6,7 +6,7 @@ import {HomeScreen} from './screens/Home';
 import {DetailScreen} from './screens/Detail';
 import {store} from './redux';
 import {Provider as ReduxProvider} from 'react-redux';
-import {Position} from './redux/features/forecasts';
+import {Position} from './types/forecasts';
 
 export type RootStackParamList = {
   Home: undefined;

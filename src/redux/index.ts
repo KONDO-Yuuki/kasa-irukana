@@ -1,5 +1,5 @@
 import {configureStore} from '@reduxjs/toolkit';
-import forecasts from './features/forecasts';
+import forecasts from './slices/forecasts';
 import {TypedUseSelectorHook, useDispatch, useSelector} from 'react-redux';
 
 export const store = configureStore({

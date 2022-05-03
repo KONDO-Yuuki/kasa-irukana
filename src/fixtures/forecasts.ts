@@ -1,4 +1,4 @@
-import {Forecast, UmbrellaNecessary} from '../redux/features/forecasts';
+import {Forecast, UmbrellaNecessary} from '../types/forecasts';
 
 export const forecastRowData = {
   publicTime: '2022-04-24T17:00:00+09:00',

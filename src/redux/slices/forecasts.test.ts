@@ -4,11 +4,11 @@ import {
   forecastRowData,
   umbrelleNecessarySample,
 } from '../../fixtures/forecasts';
+import {UmbrellaNecessaryState} from '../../types/forecasts';
 import {
   calcUmbrellaNecessaries,
   castApiResult,
   isAmbrellaNecessary,
-  UmbrellaNecessaryState,
 } from './forecasts';
 
 describe('castApiResult', () => {

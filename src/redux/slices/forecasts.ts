@@ -1,33 +1,10 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
-
-export type UmbrellaNecessaryState =
-  | 'NECESSARY'
-  | 'MAYBE'
-  | 'UNNECESSARY'
-  | 'UNKNOWN';
-
-export type UmbrellaNecessary = {
-  date: string;
-  label: UmbrellaNecessaryState;
-};
-
-export type Forecast = {
-  date: string;
-  position: string;
-  title: string;
-  dateLabel: string;
-  telop: string;
-  detail: {weather: string; wind: string};
-  temperature: {min: string | null; max: string | null};
-  chanceOfRainBy6Hours: Array<number | null>;
-  imageUrl: string;
-};
-
-export type ForecastsState = {
-  startForecasts: Forecast[];
-  goalForecasts: Forecast[];
-  umbrellaNecessaryStates: UmbrellaNecessary[];
-};
+import {
+  Forecast,
+  ForecastsState,
+  UmbrellaNecessary,
+  UmbrellaNecessaryState,
+} from '../../types/forecasts';
 
 const initialState: ForecastsState = {
   startForecasts: [],
@@ -129,6 +106,12 @@ const parseChanceOfRain = (rainLabel: string) => {
   return Number(matched);
 };
 
+/**
+ *
+ * @param startForecasts 出発地のForecast
+ * @param goalForecasts 到着地のForecast
+ * @returns UmbrellaNecessaryモデル(日付と傘が必要かどうかのステータス)
+ */
 export const calcUmbrellaNecessaries = (
   startForecasts: Forecast[],
   goalForecasts: Forecast[],
@@ -197,5 +180,3 @@ export const isAmbrellaNecessary = (
 };
 
 export default forecastsSlice.reducer;
-
-export type Position = 'start' | 'goal';

@@ -3,7 +3,7 @@ import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {
   fetchStartForecastByCityCode,
   fetchEndForecastByCityCode,
-} from '../redux/features/forecasts';
+} from '../redux/slices/forecasts';
 import {useAppDispatch, useAppSelector} from '../redux';
 import {Home as HomePage} from '../components/pages/Home';
 import {RootStackParamList} from '../Navigator';

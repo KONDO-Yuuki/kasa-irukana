@@ -1,6 +1,6 @@
 import React from 'react';
 import {Text} from '@ui-kitten/components';
-import {UmbrellaNecessaryState} from '../../redux/features/forecasts';
+import {UmbrellaNecessaryState} from '../../types/forecasts';
 
 export const UmbrellaNecessaryLabel: React.FC<{
   umbrellaNecessary: UmbrellaNecessaryState;
