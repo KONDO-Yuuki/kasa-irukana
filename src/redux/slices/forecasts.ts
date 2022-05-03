@@ -7,14 +7,14 @@ import {
   UmbrellaNecessaryState,
 } from '../../types/forecasts';
 
-const initialState: ForecastsState = {
+export const initialState: ForecastsState = {
   startForecasts: [],
   goalForecasts: [],
   umbrellaNecessaryStates: [],
-  error: null,
+  error: null, // 本当はstart goalごとにerrorフィールドを分けたほうが良いが、そもそもapiをサーバ側でまとめるべきなので深追いしない
 };
 
-interface ValidationErrors {
+interface Errors {
   errorMessage: string;
   errorDetail: string;
 }
@@ -24,7 +24,7 @@ const createFetchForecastByCityCode = (name: string) =>
     any,
     string,
     {
-      rejectValue: ValidationErrors;
+      rejectValue: Errors;
     }
   >(name, async (citiyId, {rejectWithValue}) => {
     try {
@@ -41,8 +41,7 @@ const createFetchForecastByCityCode = (name: string) =>
     } catch (err) {
       // todo sentryなどへの通知を実装
       // @ts-ignore axiosのエラーの取り扱い
-      let error: AxiosError<ValidationErrors> = err;
-      console.log(error);
+      let error: AxiosError<Errors> = err;
       if (!error.response) {
         // axios以外のエラーだった場合そのままthrowする
         throw err;
@@ -69,7 +68,9 @@ export const fetchGoalForecastByCityCode = createFetchForecastByCityCode(
 export const forecastsSlice = createSlice({
   name: 'forecasts',
   initialState: initialState,
-  reducers: {},
+  reducers: {
+    init: () => initialState,
+  },
   extraReducers: builder => {
     builder.addCase(fetchStartForecastByCityCode.fulfilled, (state, action) => {
       state.startForecasts = castApiResult(action.payload);
