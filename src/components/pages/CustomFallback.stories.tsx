@@ -4,5 +4,8 @@ import {action} from '@storybook/addon-actions';
 import {CustomFallback} from './CustomFallback';
 
 storiesOf('CustomFallback', module).add('on crashed', () => (
-  <CustomFallback resetError={action('reset error')} />
+  <CustomFallback
+    resetError={action('reset error')}
+    error={new Error('test')}
+  />
 ));
