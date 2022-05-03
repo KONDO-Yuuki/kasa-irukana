@@ -1,5 +1,4 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
-// import {forecastsApi} from '../api/forecasts';
 
 export type UmbrellaNecessaryState =
   | 'NECESSARY'

@@ -2,7 +2,7 @@ import React from 'react';
 import {Layout} from '@ui-kitten/components';
 import {StyleSheet} from 'react-native';
 
-import {Forecast, Position} from '../../features/forecasts';
+import {Forecast, Position} from '../../redux/features/forecasts';
 import {ForecastDetailPannel} from '../organisms/ForecastDetailPannel';
 
 type Props = {

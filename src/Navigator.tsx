@@ -2,11 +2,11 @@ import * as React from 'react';
 
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {HomeScreen} from './components/screens/Home';
-import {DetailScreen} from './components/screens/Detail';
-import {store} from './store';
+import {HomeScreen} from './screens/Home';
+import {DetailScreen} from './screens/Detail';
+import {store} from './redux';
 import {Provider as ReduxProvider} from 'react-redux';
-import {Position} from './features/forecasts';
+import {Position} from './redux/features/forecasts';
 
 export type RootStackParamList = {
   Home: undefined;

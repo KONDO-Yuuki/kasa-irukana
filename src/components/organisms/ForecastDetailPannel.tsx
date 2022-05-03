@@ -1,7 +1,7 @@
 import React from 'react';
 
 import {ListRenderItem, StyleSheet, View} from 'react-native';
-import {Forecast, Position} from '../../features/forecasts';
+import {Forecast, Position} from '../../redux/features/forecasts';
 import {Card, Divider, Icon, List, ListItem, Text} from '@ui-kitten/components';
 
 export type Props = {

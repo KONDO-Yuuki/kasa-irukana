@@ -3,10 +3,10 @@ import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {
   fetchStartForecastByCityCode,
   fetchEndForecastByCityCode,
-} from '../../features/forecasts';
-import {useAppDispatch, useAppSelector} from '../../hooks';
-import {Home as HomePage} from '../pages/Home';
-import {RootStackParamList} from '../../Navigator';
+} from '../redux/features/forecasts';
+import {useAppDispatch, useAppSelector} from '../redux';
+import {Home as HomePage} from '../components/pages/Home';
+import {RootStackParamList} from '../Navigator';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Home'>;
 export const HomeScreen: React.FC<Props> = ({navigation}) => {

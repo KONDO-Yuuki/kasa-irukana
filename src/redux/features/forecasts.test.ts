@@ -3,7 +3,7 @@ import {
   forecastsSample,
   forecastRowData,
   umbrelleNecessarySample,
-} from '../fixtures/forecasts';
+} from '../../fixtures/forecasts';
 import {
   calcUmbrellaNecessaries,
   castApiResult,

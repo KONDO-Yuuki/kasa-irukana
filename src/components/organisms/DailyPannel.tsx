@@ -1,7 +1,7 @@
 import React from 'react';
 import {Card, Icon, Layout, Text} from '@ui-kitten/components';
 import {StyleSheet, View} from 'react-native';
-import {UmbrellaNecessaryState} from '../../features/forecasts';
+import {UmbrellaNecessaryState} from '../../redux/features/forecasts';
 import {UmbrellaNecessaryLabel} from './UmbrellaNecessaryLabel';
 
 export type Props = {
