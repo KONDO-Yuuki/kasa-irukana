@@ -1,4 +1,5 @@
 import {AnyAction, createAsyncThunk, createSlice} from '@reduxjs/toolkit';
+import axios, {AxiosError} from 'axios';
 import {
   Forecast,
   ForecastsState,
@@ -6,48 +7,100 @@ import {
   UmbrellaNecessaryState,
 } from '../../types/forecasts';
 
-const initialState: ForecastsState = {
+export const initialState: ForecastsState = {
   startForecasts: [],
   goalForecasts: [],
   umbrellaNecessaryStates: [],
+  error: null, // 本当はstart goalごとにerrorフィールドを分けたほうが良いが、そもそもapiをサーバ側でまとめるべきなので深追いしない
 };
 
+interface Errors {
+  errorMessage: string;
+  errorDetail: string;
+}
+
 const createFetchForecastByCityCode = (name: string) =>
-  createAsyncThunk<any, string>(name, async citiyId => {
-    const result = await fetch(
-      `https://weather.tsukumijima.net/api/forecast/city/${citiyId}`,
-    );
-    return result.json();
-    // todo エラーハンドリングの実装
+  createAsyncThunk<
+    any,
+    string,
+    {
+      rejectValue: Errors;
+    }
+  >(name, async (citiyId, {rejectWithValue}) => {
+    try {
+      const result = await axios.get(
+        `https://weather.tsukumijima.net/api/forecast/city/${citiyId}`,
+      );
+      if (result.data.error) {
+        return rejectWithValue({
+          errorMessage: '通信に失敗しました',
+          errorDetail: result.data.error,
+        });
+      }
+      return result.data;
+    } catch (err) {
+      // todo sentryなどへの通知を実装
+      // @ts-ignore axiosのエラーの取り扱い
+      let error: AxiosError<Errors> = err;
+      if (!error.response) {
+        // axios以外のエラーだった場合そのままthrowする
+        throw err;
+      }
+      if ([404, 403, 502, 503].includes(error.response.status)) {
+        return rejectWithValue({
+          errorMessage: '通信に失敗しました',
+          errorDetail: `status code:${error.response.status}`,
+        });
+      }
+      return rejectWithValue({
+        errorMessage: '不明なエラーが発生しました',
+        errorDetail: error.message,
+      });
+    }
   });
 export const fetchStartForecastByCityCode = createFetchForecastByCityCode(
   'fetchStartForecastByCityCode',
 );
-export const fetchEndForecastByCityCode = createFetchForecastByCityCode(
-  'fetchEndForecastByCityCode',
+export const fetchGoalForecastByCityCode = createFetchForecastByCityCode(
+  'fetchGoalForecastByCityCode',
 );
 
 export const forecastsSlice = createSlice({
   name: 'forecasts',
   initialState: initialState,
-  reducers: {},
+  reducers: {
+    init: () => initialState,
+  },
   extraReducers: builder => {
     builder.addCase(fetchStartForecastByCityCode.fulfilled, (state, action) => {
       state.startForecasts = castApiResult(action.payload);
     });
-    builder.addCase(fetchEndForecastByCityCode.fulfilled, (state, action) => {
+    builder.addCase(fetchStartForecastByCityCode.rejected, (state, action) => {
+      state.startForecasts = [];
+      if (action.payload) {
+        state.error = action.payload.errorMessage;
+      } else {
+        state.error = action.error.message;
+      }
+    });
+    builder.addCase(fetchGoalForecastByCityCode.fulfilled, (state, action) => {
       state.goalForecasts = castApiResult(action.payload);
+    });
+    builder.addCase(fetchGoalForecastByCityCode.rejected, (state, action) => {
+      state.goalForecasts = [];
+      if (action.payload) {
+        state.error = action.payload.errorMessage;
+      } else {
+        state.error = action.error.message;
+      }
     });
     builder.addMatcher(
       (action: AnyAction) => {
-        return action.type.endsWith('fulfilled'); // fulfilled系のAPIの場合のみ発火するhook
+        return action.type.endsWith('fulfilled'); // fulfilled系のAPIの場合のみ発火する
       },
       state => {
         // startForecasts / goalForecastsの両方がセットされている場合、umbrellaNecessaryStatesを再計算する
-        if (
-          state.startForecasts.length === 3 &&
-          state.goalForecasts.length === 3
-        ) {
+        if (state.startForecasts.length > 0 && state.goalForecasts.length > 0) {
           state.umbrellaNecessaryStates = calcUmbrellaNecessaries(
             state.startForecasts,
             state.goalForecasts,
@@ -179,3 +232,4 @@ export const isAmbrellaNecessary = (
 };
 
 export default forecastsSlice.reducer;
+export const {init} = forecastsSlice.actions;
