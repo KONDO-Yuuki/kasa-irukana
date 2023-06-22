@@ -2,11 +2,12 @@ import React, {useEffect} from 'react';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {
   fetchStartForecastByCityCode,
-  fetchEndForecastByCityCode,
-} from '../../features/forecasts';
-import {useAppDispatch, useAppSelector} from '../../hooks';
-import {Home as HomePage} from '../pages/Home';
-import {RootStackParamList} from '../../Navigator';
+  fetchGoalForecastByCityCode,
+  init,
+} from '../redux/slices/forecasts';
+import {useAppDispatch, useAppSelector} from '../redux';
+import {Home as HomePage} from '../components/pages/Home';
+import {RootStackParamList} from '../Navigator';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Home'>;
 export const HomeScreen: React.FC<Props> = ({navigation}) => {
@@ -28,9 +29,17 @@ export const HomeScreen: React.FC<Props> = ({navigation}) => {
       };
     }),
   );
+  const isLoading = useAppSelector(
+    state => state.forecasts.umbrellaNecessaryStates.length === 0,
+  );
+  const error = useAppSelector(state => state.forecasts.error);
+  if (error) {
+    dispatch(init);
+    throw new Error(error);
+  }
   useEffect(() => {
     dispatch(fetchStartForecastByCityCode('140020'));
-    dispatch(fetchEndForecastByCityCode('130010'));
+    dispatch(fetchGoalForecastByCityCode('130010'));
   }, [dispatch]);
-  return <HomePage isLoading={false} dailyPannels={dailyPannels} />;
+  return <HomePage isLoading={isLoading} dailyPannels={dailyPannels} />;
 };

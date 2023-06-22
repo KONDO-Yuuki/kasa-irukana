@@ -4,6 +4,7 @@ import {StyleSheet, View, ListRenderItem} from 'react-native';
 import {DailyPannel, Props as DailyPannelProps} from '../organisms/DailyPannel';
 
 type Props = {
+  errorMessage?: string;
   isLoading: boolean;
   dailyPannels: DailyPannelProps[];
 };
